@@ -20,24 +20,30 @@ function Login() {
       });
 
       const data = await response.json();
+      console.log("الرد من السيرفر:", data); // إضافة للتحقق من البيانات
 
       if (!response.ok) {
         alert(data.message || 'فشل تسجيل الدخول');
         return;
       }
 
-      if (data.user.role !== 'admin') {
-        alert('هذا الحساب ليس أدمن ❌');
-        return;
+      // فحص إذا كان role موجود في البيانات
+      if (data.user && data.user.role) {
+        if (data.user.role !== 'admin') {
+          alert('هذا الحساب ليس أدمن ❌');
+          return;
+        }
+
+        // ✅ تسجيل دخول ناجح
+        alert('تم تسجيل الدخول بنجاح ✅');
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // لاحقًا منعمل توجيه للوحة التحكم
+      } else {
+        alert('لم يتم العثور على دور المستخدم');
       }
 
-      // ✅ تسجيل دخول ناجح
-      alert('تم تسجيل الدخول بنجاح ✅');
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      // لاحقًا منعمل توجيه للوحة التحكم
     } catch (err) {
       console.error(err);
       alert('حدث خطأ، حاول لاحقًا');
