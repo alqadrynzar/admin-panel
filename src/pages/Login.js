@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // استيراد useNavigate للتوجيه بعد تسجيل الدخول
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // تهيئة useNavigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,7 +35,8 @@ function Login() {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken); // إذا حابب تخزنها
 
-        // لاحقًا يمكنك توجيه المستخدم لصفحة معينة
+        // التوجيه إلى لوحة التحكم بعد تسجيل الدخول الناجح
+        navigate('/dashboard'); // تغيير المسار إلى لوحة التحكم
       } else {
         alert('حدث خطأ، حاول لاحقًا');
       }
