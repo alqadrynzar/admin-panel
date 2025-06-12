@@ -20,28 +20,22 @@ function Login() {
       });
 
       const data = await response.json();
-      console.log("الرد من السيرفر:", data); // إضافة للتحقق من البيانات
+      console.log("الرد من السيرفر:", data);
 
       if (!response.ok) {
         alert(data.message || 'فشل تسجيل الدخول');
         return;
       }
 
-      // فحص إذا كان role موجود في البيانات
-      if (data.user && data.user.role) {
-        if (data.user.role !== 'admin') {
-          alert('هذا الحساب ليس أدمن ❌');
-          return;
-        }
-
-        // ✅ تسجيل دخول ناجح
+      // بعد التسجيل الناجح، نخزن الـ accessToken فقط
+      if (data.accessToken) {
         alert('تم تسجيل الدخول بنجاح ✅');
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken); // إذا حابب تخزنها
 
-        // لاحقًا منعمل توجيه للوحة التحكم
+        // لاحقًا يمكنك توجيه المستخدم لصفحة معينة
       } else {
-        alert('لم يتم العثور على دور المستخدم');
+        alert('حدث خطأ، حاول لاحقًا');
       }
 
     } catch (err) {
@@ -52,7 +46,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>تسجيل دخول الأدمن</h2>
+      <h2>تسجيل دخول</h2>
       <form onSubmit={handleLogin}>
         <input
           type="email"
